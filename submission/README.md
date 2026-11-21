@@ -9,7 +9,7 @@ Cấu trúc theo [`docs/delivery_road_v1.0.md`](../docs/delivery_road_v1.0.md) (
 | `DangMinhHuy-front.zip` | CVAT for images 1.1, không kèm ảnh; A01–A16 (16 ảnh) | `lint` mở lại được ✓ |
 | `DangMinhHuy-fisheye.zip` | CVAT for images 1.1, không kèm ảnh; B01–B12 (12 ảnh) | `lint` mở lại được ✓ |
 | `DangMinhHuy-manifest.json` | Manifest do `road_check lint --manifest` tạo, `contains_images: false` ✓ | ✓ |
-| `DangMinhHuy-qc1-for-ban-duoc-kiem.md` | Phiếu QC 1 — **đổi tên** thành `...-for-<tên bạn>.md` và điền sau khi nhận lô của bạn được ghép | chờ |
+| `DangMinhHuy-qc1-for-phat.md` | Phiếu QC 1 đã điền — kiểm lô **Phát** (mẫu 6 ảnh, 116 nhãn, 6 nặng + 12 chính = 10,3 % → **Rework**) | ✓ |
 | `DangMinhHuy-report.md` | Báo cáo cá nhân (mục 3, 7a viết từ lỗi thật của `lint`) | ✓ |
 | `images/` | 4 ảnh chụp cho mục 6 của báo cáo | ✓ |
 

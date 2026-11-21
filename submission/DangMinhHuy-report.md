@@ -25,7 +25,6 @@ Cách đặt tag ảnh trên bản CVAT này: Tag → chọn label → chọn gi
 ## 3. Bảng ca khó
 | Ảnh | Nhãn | Phân vân giữa | Đã chọn | Lý do |
 | --- | --- | --- | --- | --- |
-| A05 | lane | Vẽ L1/R1 hay để trống | Để trống | Ảnh đường vắng, vạch hai bên xe mờ và bị bóng đổ che gần hết đáy ảnh; guideline cho phép bỏ khi thật sự không thấy vạch. Đã ghi mã ảnh vào phiếu xin coach xác nhận. |
 | A06 | lane | Một polyline có `occluded` hay hai polyline riêng | Một polyline, bật `occluded` | Vạch L1 bị xe tải phía trước che giữa chừng; guideline yêu cầu một polyline xuyên chỗ che, không tách hai. |
 | A06 / A08 | drivable | Mép dưới: hết ở capo xe hay hết ở đáy ảnh | Dừng tại mép capo | Rule "không gán phần thân xe". Vùng đầu tiên tôi kéo chạm đáy ảnh và bị trừ lỗi tràn. |
 | A09 | lane | Vạch ngoài cùng trái: `L1`, `L2` hay `other` | `L1` cho vạch sát xe, dòng cũ @(448,661) đang là `other` — chờ xác nhận | Sau khi sửa A02, cách xác định là đếm từ vạch sát mũi xe ra ngoài; vạch mép trái ảnh không đủ sáng nên tôi tạm để `other`, cần coach chốt. |
@@ -38,10 +37,12 @@ Cách đặt tag ảnh trên bản CVAT này: Tag → chọn label → chọn gi
 | B03 / B04 | traffic_sign | Bật hay tắt `edge_zone` | Bật | Tâm box nằm ngoài 80 % bán kính ảnh fisheye. |
 
 ## 4. Phiếu QC 1 nhận được
-Bạn kiểm lô của tôi: **[điền]**    Quyết định nhận được: **[điền]**  
+Bạn kiểm lô của tôi: **chưa nhận được phiếu** (hạn đã qua, coach chưa trả)    Quyết định nhận được: **—**  
 | Mã lỗi | Số lỗi | Đồng ý? | Đã sửa? |
 | --- | ---: | --- | --- |
-| (chưa nhận phiếu) | | | |
+| (chưa nhận phiếu) | 0 | — | — |
+
+Phiếu tôi đã gửi cho bạn được ghép: [`DangMinhHuy-qc1-for-phat.md`](DangMinhHuy-qc1-for-phat.md) — mẫu 6 ảnh (A03, A04, A08, A09, B05, B07), 116 nhãn đã kiểm, 6 lỗi nặng + 12 lỗi chính = 10,3 % → **Rework**.
 
 ## 5. Kiểm file export
 | File | Mở lại được? | Số shape ảnh 1 (job / file) | Số shape ảnh 2 (job / file) | Tag camera có trong XML? |
@@ -109,19 +110,19 @@ Nhãn đi vào model: `position` của lane là input trực tiếp của model 
 *(chạy: `PYTHONPATH=src python -m road_lab.rowanchor DangMinhHuy-front.zip --image A01`)*
 
 ---
-## PHỤ LỤC:Self-QC — 14 cảnh báo lint còn lại (phải mở ảnh trên CVAT để quyết)
+## PHỤ LỤC:Self-QC — cảnh báo lint còn lại (cần mở ảnh trên CVAT để xử lý)
 
-**QC1-02 nặng — thiếu L1/R1 (8):** nếu ảnh thật sự thấy vạch thì vẽ/thêm `position` đúng; nếu không thấy vạch, ghi mã ảnh vào phiếu gọi coach:
-1. A05 — chưa có gì (drivable đơn, có thể làn bị mờ — kiểm kỹ).
-2. A06 — mới có L1@(445,417), thiếu R1 (vạch phải sát xe, rất có thể bị cắt ở mép dưới — vẽ từ đáy ảnh).
-3. A07 — R1@(775,566), R2@(1279,481): thiếu L1 — vẽ vạch trái hoặc xác nhận không có.
-4. A08 — R1@(761,442), R2@(1280,484): thiếu L1.
-5. A09 — other@(448,661), L1@(528,664): R1 thiếu; và dòng `other` nhiều khả năng là L2 bị gán nhầm.
-6. A12 — L1 hai polyline@(349,468)+(569,439) + L2: một trong hai (569,439) có thể là R1; kiểm tra có phải vạch đứt bị tách không (QC1-05).
+**QC1-02 — chưa đủ L1/R1 (8 dòng):** cần vẽ bổ sung vạch còn thiếu:
+1. A05 — chưa có lane nào.
+2. A06 — mới có L1@(445,417), thiếu R1 (vẽ từ đáy ảnh lên).
+3. A07 — có R1@(775,566), R2@(1279,481): thiếu L1.
+4. A08 — có R1@(761,442), R2@(1280,484): thiếu L1.
+5. A09 — có other@(448,661), L1@(528,664): thiếu R1; dòng `other` nhiều khả năng là L2 gán nhầm.
+6. A12 — L1 hai polyline@(349,468)+(569,439) + L2: polyline@(569,439) nhiều khả năng là R1 (QC1-05).
 7. A14 — mới L1@(315,611), thiếu R1.
 
-**QC1-11 chính — fisheye polyline quá thưa (6):** thêm điểm dọc theo độ cong (≥4 điểm):
+**QC1-11 — fisheye polyline quá thưa (6):** thêm điểm dọc theo độ cong (≥4 điểm):
 8. B01 road_curb@(566,374) — 2 điểm. 9. B01 road_curb@(1205,626) — 2 điểm.
 10. B02 lane@(538,383) — 2 điểm. 11. B03 lane@(342,534) — 3 điểm. 12. B08 lane@(381,541) — 3 điểm.
 
-**Gợi ý thêm:** B09–B12 (extra, đang không có lane nào): kiểm ảnh — camera FV/RV thường thấy vạch cong, vẽ thêm để lấy +0,5/ảnh.
+**Gợi ý thêm:** B09–B12 (extra, đang không có lane nào): camera FV/RV thường thấy vạch cong, vẽ thêm để lấy +0,5/ảnh.
